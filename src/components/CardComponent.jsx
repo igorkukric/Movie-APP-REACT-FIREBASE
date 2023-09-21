@@ -8,7 +8,7 @@ const CardComponent = ({item}) => {
     <Link>
       <Box borderRadius={"lg"} background="blackAlpha.300">
         <Image
-          src={`${imagePath}/${item?.backdrop_path}`}
+          src={`${imagePath}/${item?.poster_path}`}
           borderRadius={"lg"}
           objectFit={"cover"}
           width={"full"}
