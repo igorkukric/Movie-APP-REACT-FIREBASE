@@ -28,7 +28,7 @@ export const getMovies = async (page = 1) => {
 
 export const getTvShows = async (page = 1) => {
   const res = await axios.get(
-    `${apiUrl}/discover/tv?api_key=${apiKey}&page=${page}`
+    `${apiUrl}/discover/tv?api_key=${apiKey}&page=${page}&sort_by=vote_count.desc`
   );
   return res?.data;
 };
