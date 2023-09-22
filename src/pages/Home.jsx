@@ -37,7 +37,7 @@ const Home = () => {
               height={"300px"}
             />
           ) : (
-            <CardComponent key={item?.id} item={item} />
+            <CardComponent key={item?.id} item={item} type={item?.media_type} />
           )
         )}
       </Grid>

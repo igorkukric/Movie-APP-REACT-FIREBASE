@@ -40,7 +40,7 @@ const Movies = () => {
               height={"300px"}
             />
           ) : (
-            <CardComponent key={movie?.id} item={movie} />
+            <CardComponent key={movie?.id} item={movie} type={"movie"} />
           )
         )}
       </Grid>

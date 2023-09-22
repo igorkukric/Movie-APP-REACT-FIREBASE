@@ -25,10 +25,14 @@ export const getMovies = async (page = 1) => {
 
 // Series
 
-
 export const getTvShows = async (page = 1) => {
   const res = await axios.get(
     `${apiUrl}/discover/tv?api_key=${apiKey}&page=${page}&sort_by=vote_count.desc`
   );
+  return res?.data;
+};
+
+export const getDetails = async (mediaType, id) => {
+  const res = await axios.get(`${apiUrl}/${mediaType}/${id}?api_key=${apiKey}`);
   return res?.data;
 };
