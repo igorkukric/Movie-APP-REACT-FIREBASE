@@ -36,3 +36,12 @@ export const getDetails = async (mediaType, id) => {
   const res = await axios.get(`${apiUrl}/${mediaType}/${id}?api_key=${apiKey}`);
   return res?.data;
 };
+
+//  Search
+
+export const searchByType = async (mediaType, query, page = 1) => {
+  const res = await axios.get(
+    `${apiUrl}/search/${mediaType}?api_key=${apiKey}&query=${query}&page=${page}`
+  );
+  return res?.data;
+};
