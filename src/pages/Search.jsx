@@ -3,14 +3,18 @@ import {
   Box,
   Button,
   Flex,
+  Grid,
   Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Skeleton,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { searchByType } from "../services/api";
+import CardComponent from "../components/CardComponent";
+import Pagination from "../components/Pagination";
 
 const Search = () => {
   const [category, setCategory] = useState({
@@ -18,12 +22,27 @@ const Search = () => {
     title: "Movies",
   });
   const [searchText, setSearchText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [activePage, setActivePage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [media, setMedia] = useState([]);
 
   const handleSubmit = (e) => {
     // const resolveCategory = category === "Movies" ? "movie" : "tv";
     e.preventDefault();
-    console.log(category.value, searchText, 1);
-    searchByType()
+    setIsLoading(true);
+    searchByType(category?.value, searchText, 1)
+      .then((res) => {
+        setMedia(res?.results);
+        setActivePage(res?.activePage);
+        setTotalPage(res?.total_pages);
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -62,6 +81,28 @@ const Search = () => {
           </form>
         </Box>
       </Flex>
+
+      <Grid templateColumns="repeat(5, 1fr)" gap={6} mt="6">
+        {media?.map((med) =>
+          isLoading ? (
+            <Skeleton
+              key={med?.id}
+              borderRadius={"lg"}
+              background={"blackAlpha.300"}
+              height={"300px"}
+            />
+          ) : (
+            <CardComponent key={med?.id} item={med} type={category?.value} />
+          )
+        )}
+      </Grid>
+
+      {/* Pagination */}
+      {/* <Pagination
+        currentPage={activePage}
+        setCurrentPage={setActivePage}
+        totalPages={totalPage}
+      /> */}
     </Box>
   );
 };
