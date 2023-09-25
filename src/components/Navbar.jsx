@@ -1,5 +1,14 @@
 import React from "react";
-import { Container, Flex, Box } from "@chakra-ui/react";
+import {
+  Container,
+  Flex,
+  Box,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -18,11 +27,20 @@ const Navbar = () => {
               NETFLEX
             </Box>
           </Link>
-          <Flex gap="4">
+          <Flex gap="4" alignItems="center">
             <Link to="/">Home</Link>
             <Link to="/movies">Movies</Link>
             <Link to="/shows">TV Shows</Link>
             <Link to="/search">Search</Link>
+            <Menu>
+              <MenuButton>
+                <Avatar size={"sm"} bg="red.600" name="Zoki zokic" />
+              </MenuButton>
+              <MenuList>
+                <MenuItem>Watchlist</MenuItem>
+                <MenuItem>Logout</MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
         </Flex>
       </Container>

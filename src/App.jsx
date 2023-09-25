@@ -6,10 +6,12 @@ import Shows from "./pages/shows/Shows";
 import Search from "./pages/Search";
 import MovieDetails from "./pages/movies/MovieDetails";
 import ShowDetails from "./pages/shows/ShowDetails";
+import { AuthProvider } from './context/useAuth'
 
 function App() {
   return (
     <BrowserRouter>
+    <AuthProvider>
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -20,6 +22,7 @@ function App() {
           <Route path="/tv/:id" element= {<ShowDetails />} />
         </Routes>
       </Layout>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
