@@ -1,6 +1,6 @@
-import { Box, Heading, Spinner, Text } from "@chakra-ui/react";
+import { Box, Grid, Heading, Image, Spinner, Text } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { getDetails } from "../../services/api";
+import { getDetails, imagePath } from "../../services/api";
 import { useParams } from "react-router-dom";
 
 const MovieDetails = () => {
@@ -30,8 +30,16 @@ const MovieDetails = () => {
         </Box>
       ) : (
         <Box>
+         <Grid templateColumns="1fr 2fr" gap={6} mt="6">
+          <Box>
+          <Image src={`${imagePath}${details?.poster_path}`} borderRadius={"lg"} objectFit={"cover"} h='500px'/>
+          </Box>
+
+          <Box>
           <Heading>{details?.title} </Heading>
           <Text color="gray.400" size="xs">{details?.original_title} </Text>
+          </Box>
+         </Grid>
         </Box>
       )}
     </Box>
