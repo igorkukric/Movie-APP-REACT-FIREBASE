@@ -45,3 +45,12 @@ export const searchByType = async (mediaType, query, page = 1) => {
   );
   return res?.data;
 };
+
+// get Videos
+
+export const getVideos = async (mediaType, id) => {
+  const res = await axios.get(
+    `${apiUrl}/${mediaType}/${id}/videos?api_key=${apiKey}`
+  );
+  return res?.data;
+};

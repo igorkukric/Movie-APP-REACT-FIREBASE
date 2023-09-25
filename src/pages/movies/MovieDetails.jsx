@@ -10,12 +10,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { getDetails, imagePath } from "../../services/api";
+import { getDetails, getVideos, imagePath } from "../../services/api";
 import { useParams } from "react-router-dom";
+import VideoComponent from "../../components/VideoComponent";
 
 const MovieDetails = () => {
   const router = useParams();
-  const [details, setDetails] = useState();
+  const [details, setDetails] = useState({});
+  const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const { id } = router;
@@ -30,6 +32,19 @@ const MovieDetails = () => {
         console.log(err, "err");
       })
       .finally(() => setIsLoading(false));
+
+    getVideos("movie", id).then((res) => {
+      console.log(res, "video res");
+      const { results } = res;
+      const resolveVideoType = results?.find(
+        (movie) => movie?.type === "Trailer"
+      );
+      //console.log(resolveVideoType, 'resolve')
+      if (resolveVideoType) {
+        setVideo(resolveVideoType);
+      }
+      setVideo(resolveVideoType);
+    });
   }, []);
 
   return (
@@ -93,9 +108,7 @@ const MovieDetails = () => {
             </Box>
           </Grid>
 
-        <Box mt={6}>
-          Video
-        </Box>
+          <Box mt={6}>{video !== null && <VideoComponent id={video?.key} />}</Box>
         </Box>
       )}
     </Box>
