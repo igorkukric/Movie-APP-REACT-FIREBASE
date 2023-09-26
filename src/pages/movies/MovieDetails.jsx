@@ -8,17 +8,25 @@ import {
   Spinner,
   Tag,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { getDetails, getVideos, imagePath } from "../../services/api";
 import { useParams } from "react-router-dom";
 import VideoComponent from "../../components/VideoComponent";
+import { useAuth } from "../../context/useAuth";
+import { db } from "../../firebase";
+import { doc, collection,addDoc } from "firebase/firestore";
 
 const MovieDetails = () => {
+  const { user,uid } = useAuth()
+  const toast = useToast();
   const router = useParams();
   const [details, setDetails] = useState({});
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const userFavouritesCollection = collection(db, 'movies')
 
   const { id } = router;
 
@@ -46,6 +54,49 @@ const MovieDetails = () => {
       setVideo(resolveVideoType);
     });
   }, []);
+
+  const addFavouriteMovie = async (movieData) => {
+    try {
+      if (!user) {
+        console.log("No user found!")
+        throw new Error('No user found!')
+      }
+
+      const userDocRef = doc(userFavouritesCollection, uid)
+      const favouritesCollection = collection(userDocRef, 'favourites')
+
+      await addDoc(favouritesCollection, movieData)
+      // todo: local state change
+      toast({
+        title: "Success",
+        description: "Movie added to watch list.",
+        status: "success",
+        duration: 3000,
+        position: "top",
+        isClosable: true
+      });
+    } catch (error) {
+      console.log(error, 'error from firebase')
+      
+    }
+  }
+
+  const handleSave = () => {
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "Please login to save.",
+        status: "error",
+        duration: 3000,
+        position: "top",
+        isClosable: true
+      });
+      return;
+    } else {
+      console.log('save')
+      addFavouriteMovie(details)
+    }
+  };
 
   return (
     <Box mt="6">
@@ -104,11 +155,13 @@ const MovieDetails = () => {
                   {details?.homepage}{" "}
                 </a>
               </Text>
-              <Button>Add To Watchlist</Button>
+              <Button onClick={handleSave}>Add To Watchlist</Button>
             </Box>
           </Grid>
 
-          <Box mt={6}>{video !== null && <VideoComponent id={video?.key} />}</Box>
+          <Box mt={6}>
+            {video !== null && <VideoComponent id={video?.key} />}
+          </Box>
         </Box>
       )}
     </Box>

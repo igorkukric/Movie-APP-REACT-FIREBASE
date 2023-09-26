@@ -54,17 +54,25 @@ const Navbar = () => {
             {user && (
               <Menu>
                 <MenuButton>
-                  <Avatar size={"sm"} bg="red.500" name={user?.displayName || user?.email} />
+                  <Avatar
+                    size={"sm"}
+                    bg="red.500"
+                    name={user?.displayName || user?.email}
+                  />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>
-                  <Link to='/watchlist'>Watchlist</Link>
-                  </MenuItem>
+                  <Link to="/watchlist">
+                    <MenuItem>Watchlist</MenuItem>
+                  </Link>
                   <MenuItem onClick={logout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
             )}
-            {!user && <Box cursor="pointer" onClick={handleGoogleLogin}>Login </Box>}
+            {!user && (
+              <Box cursor="pointer" onClick={handleGoogleLogin}>
+                Login{" "}
+              </Box>
+            )}
           </Flex>
         </Flex>
       </Container>

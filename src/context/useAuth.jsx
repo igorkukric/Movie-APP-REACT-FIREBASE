@@ -15,6 +15,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
  
   const [user, setUser] = useState(null);
+  const [uid, setuid] = useState(null)
   console.log(user, 'user from firebase')
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,8 +23,10 @@ export const AuthProvider = ({ children }) => {
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
+        setuid(user?.uid)
       } else {
         setUser(null);
+        setuid(null)
       }
 
       setIsLoading(false);
@@ -53,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signUp, login, logout, googleSignIn, user, isLoading }}
+      value={{ signUp, login, logout, googleSignIn, user, uid, isLoading }}
     >
       {children}
     </AuthContext.Provider>
