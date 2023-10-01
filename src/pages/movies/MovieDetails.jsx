@@ -16,19 +16,29 @@ import { useParams } from "react-router-dom";
 import VideoComponent from "../../components/VideoComponent";
 import { useAuth } from "../../context/useAuth";
 import { db } from "../../firebase";
-import { doc, collection, setDoc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  setDoc,
+  getDoc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 const MovieDetails = () => {
   const { user, uid } = useAuth();
   const toast = useToast();
-  const router = useParams();
-  const [details, setDetails] = useState({});
+  const { id } = useParams();
+  // const { id } = router;
+  const [details, setDetails] = useState(null);
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [IsInWatchList, setIsInWatchList] = useState(false)
 
   const userFavouritesCollection = collection(db, "movies");
 
-  const { id } = router;
+  
 
   useEffect(() => {
     getDetails("movie", id)
@@ -39,7 +49,7 @@ const MovieDetails = () => {
       .catch((err) => {
         console.log(err, "err");
       })
-      .finally(() => setIsLoading(false));
+     
 
     getVideos("movie", id).then((res) => {
       console.log(res, "video res");
@@ -52,8 +62,23 @@ const MovieDetails = () => {
         setVideo(resolveVideoType);
       }
       setVideo(resolveVideoType);
-    });
-  }, []);
+    }).catch((err)=> console.log(err)).finally(()=> setIsLoading(false))
+  }, [id]);
+
+  useEffect(() => {
+    if (uid !== null && details) {
+      const moviesRef = collection(db, "movies");
+      const userDocRef = doc(moviesRef, uid);
+      const favourites = collection(userDocRef, "favourites");
+      const favouritesQuery = query(favourites, where("id", "==", details?.id));
+
+      getDocs(favouritesQuery).then((querySnapshot)=> {
+        setIsInWatchList(!querySnapshot?.empty)
+      }).catch((err)=> {
+        console.log(err, "error from getting docs")
+      })
+    }
+  }, [details, uid]);
 
   const addFavouriteMovie = async (movieData) => {
     try {
@@ -83,6 +108,7 @@ const MovieDetails = () => {
       } else {
         await setDoc(movieDocument, movieData);
         // todo: local state change
+        setIsInWatchList(true)
         toast({
           title: "Success",
           description: "Movie added to watch list.",
@@ -171,7 +197,7 @@ const MovieDetails = () => {
                   {details?.homepage}{" "}
                 </a>
               </Text>
-              <Button onClick={handleSave}>Add To Watchlist</Button>
+              <Button onClick={handleSave}>{IsInWatchList ? "In Watchlist" : "Add To Watchlist"}</Button>
             </Box>
           </Grid>
 
