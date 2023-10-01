@@ -16,17 +16,17 @@ import { useParams } from "react-router-dom";
 import VideoComponent from "../../components/VideoComponent";
 import { useAuth } from "../../context/useAuth";
 import { db } from "../../firebase";
-import { doc, collection,addDoc } from "firebase/firestore";
+import { doc, collection, setDoc, getDoc } from "firebase/firestore";
 
 const MovieDetails = () => {
-  const { user,uid } = useAuth()
+  const { user, uid } = useAuth();
   const toast = useToast();
   const router = useParams();
   const [details, setDetails] = useState({});
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const userFavouritesCollection = collection(db, 'movies')
+  const userFavouritesCollection = collection(db, "movies");
 
   const { id } = router;
 
@@ -58,28 +58,44 @@ const MovieDetails = () => {
   const addFavouriteMovie = async (movieData) => {
     try {
       if (!user) {
-        console.log("No user found!")
-        throw new Error('No user found!')
+        console.log("No user found!");
+        throw new Error("No user found!");
       }
 
-      const userDocRef = doc(userFavouritesCollection, uid)
-      const favouritesCollection = collection(userDocRef, 'favourites')
+      const userDocRef = doc(userFavouritesCollection, uid);
+      const favouritesCollection = collection(userDocRef, "favourites");
+      const movieDocument = doc(
+        favouritesCollection,
+        movieData?.id?.toString()
+      );
 
-      await addDoc(favouritesCollection, movieData)
-      // todo: local state change
-      toast({
-        title: "Success",
-        description: "Movie added to watch list.",
-        status: "success",
-        duration: 3000,
-        position: "top",
-        isClosable: true
-      });
+      const docSnap = await getDoc(movieDocument);
+
+      if (docSnap.exists()) {
+        toast({
+          title: "Error",
+          description: "Movie already in the list.",
+          status: "info",
+          duration: 3000,
+          position: "top",
+          isClosable: true,
+        });
+      } else {
+        await setDoc(movieDocument, movieData);
+        // todo: local state change
+        toast({
+          title: "Success",
+          description: "Movie added to watch list.",
+          status: "success",
+          duration: 3000,
+          position: "top",
+          isClosable: true,
+        });
+      }
     } catch (error) {
-      console.log(error, 'error from firebase')
-      
+      console.log(error, "error from firebase");
     }
-  }
+  };
 
   const handleSave = () => {
     if (!user) {
@@ -89,12 +105,12 @@ const MovieDetails = () => {
         status: "error",
         duration: 3000,
         position: "top",
-        isClosable: true
+        isClosable: true,
       });
       return;
     } else {
-      console.log('save')
-      addFavouriteMovie(details)
+      console.log("save");
+      addFavouriteMovie(details);
     }
   };
 
