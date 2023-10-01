@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Heading, Text } from "@chakra-ui/react";
-import { getDocs, collection, doc, query } from "firebase/firestore";
+import { Box, Button, Grid, Heading, Text, useToast } from "@chakra-ui/react";
+import { getDocs, collection, doc, query, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../context/useAuth";
 import CardComponent from "../components/CardComponent";
 
 const Watchlist = () => {
+  const toast = useToast();
   const { user, uid } = useAuth();
   const [watchlist, setWatchlist] = useState([]);
 
@@ -34,6 +35,39 @@ const Watchlist = () => {
 
   console.log(watchlist, "watchlist");
 
+  const removeFromWatchList = async (movieID) => {
+    try {
+      if (!user) {
+        console.log("No user found!");
+        throw new Error("No user found!");
+      }
+
+      const userfavouritesCollection = collection(
+        db,
+        "movies",
+        uid,
+        "favourites"
+      );
+      const movieDocRef = doc(userfavouritesCollection, movieID);
+      await deleteDoc(movieDocRef);
+      toast({
+        title: "Success",
+        description: "Movie removed from watchlist.",
+        status: "success",
+        duration: 3000,
+        position: "top",
+        isClosable: true,
+      });
+
+      const filteredWatchlist = watchlist?.filter(
+        (movie) => movie?.id.toString() !== movieID.toString()
+      );
+      setWatchlist(filteredWatchlist);
+    } catch (error) {
+      console.log(error, "error removing movie from watchlist");
+    }
+  };
+
   return (
     <Box mt="6">
       <Heading>Watchlist</Heading>
@@ -50,7 +84,23 @@ const Watchlist = () => {
           mt="6"
         >
           {watchlist?.map((movie) => {
-            return <CardComponent key={movie?.id} item={movie} type="movie" />;
+            return (
+              <Box key={movie?.id} position="relative">
+                <Button
+                  position="absolute"
+                  color="white"
+                  zIndex={"999"}
+                  background={"red"}
+                  top="5px"
+                  right="5px"
+                  size="xs"
+                  onClick={() => removeFromWatchList(movie?.id?.toString())}
+                >
+                  Remove
+                </Button>
+                <CardComponent key={movie?.id} item={movie} type="movie" />
+              </Box>
+            );
           })}
         </Grid>
       )}
