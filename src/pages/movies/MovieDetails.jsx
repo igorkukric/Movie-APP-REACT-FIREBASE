@@ -73,7 +73,7 @@ const MovieDetails = () => {
 
       if (docSnap.exists()) {
         toast({
-          title: "Error",
+          title: "Info",
           description: "Movie already in the list.",
           status: "info",
           duration: 3000,
