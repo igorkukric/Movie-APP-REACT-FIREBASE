@@ -27,7 +27,11 @@ const Home = () => {
   return (
     <Box mt="6">
       <Heading fontSize="2xl">Trending now</Heading>
-      <Grid templateColumns="repeat(5, 1fr)" gap={6} mt="6">
+      <Grid templateColumns={{
+            base: "1fr",
+            md: "repeat(3, 1fr)",
+            lg: "repeat(5, 1fr)",
+          }} gap={6} mt="6">
         {media?.map((item) =>
           isLoading ? (
             <Skeleton

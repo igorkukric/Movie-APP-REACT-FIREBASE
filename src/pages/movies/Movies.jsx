@@ -30,7 +30,11 @@ const Movies = () => {
   return (
     <Box mt="6">
       <Heading fontSize="2xl">Discover Movies</Heading>
-      <Grid templateColumns="repeat(5, 1fr)" gap={6} mt="6">
+      <Grid templateColumns={{
+            base: "1fr",
+            md: "repeat(3, 1fr)",
+            lg: "repeat(5, 1fr)",
+          }} gap={6} mt="6">
         {movies?.map((movie) =>
           isLoading ? (
             <Skeleton

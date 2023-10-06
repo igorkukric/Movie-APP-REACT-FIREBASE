@@ -9,50 +9,50 @@ const Watchlist = () => {
   const toast = useToast();
   const { user, uid } = useAuth();
   const [watchlist, setWatchlist] = useState([]);
+  const [watchlistType, setWatchlistType] = useState("movies");
 
   useEffect(() => {
     if (!user) {
       return;
     }
 
-    const movies = collection(db, "movies");
-    const userDocRef = doc(movies, uid);
-    const favourites = collection(userDocRef, "favourites");
-    const favouritesQuery = query(favourites);
+    const type = watchlistType === "movies" ? "movies" : "tv";
+    const items = collection(db, type);
+    const userDocRef = doc(items, uid);
+    const favorites = collection(userDocRef, "favourites");
+    const favoritesQuery = query(favorites);
 
-    getDocs(favouritesQuery)
+    getDocs(favoritesQuery)
       .then((querySnapshot) => {
-        const movies = [];
+        const items = [];
         querySnapshot?.forEach((doc) => {
-          movies.push(doc?.data());
+          items.push(doc?.data());
         });
-        setWatchlist(movies);
+        setWatchlist(items);
       })
       .catch((err) => {
         console.log(err, "Error from firebase");
       });
-  }, [user, uid]);
+  }, [user, uid, watchlistType]);
 
-  console.log(watchlist, "watchlist");
-
-  const removeFromWatchList = async (movieID) => {
+  const removeFromWatchList = async (itemID) => {
     try {
       if (!user) {
         console.log("No user found!");
         throw new Error("No user found!");
       }
 
-      const userfavouritesCollection = collection(
+      const userFavoritesCollection = collection(
         db,
-        "movies",
+        watchlistType,
         uid,
         "favourites"
       );
-      const movieDocRef = doc(userfavouritesCollection, movieID);
-      await deleteDoc(movieDocRef);
+      const itemDocRef = doc(userFavoritesCollection, itemID);
+      await deleteDoc(itemDocRef);
       toast({
         title: "Success",
-        description: "Movie removed from watchlist.",
+        description: "Item removed from watchlist.",
         status: "success",
         duration: 3000,
         position: "top",
@@ -60,17 +60,24 @@ const Watchlist = () => {
       });
 
       const filteredWatchlist = watchlist?.filter(
-        (movie) => movie?.id.toString() !== movieID.toString()
+        (item) => item?.id.toString() !== itemID.toString()
       );
       setWatchlist(filteredWatchlist);
     } catch (error) {
-      console.log(error, "error removing movie from watchlist");
+      console.log(error, "error removing item from watchlist");
     }
   };
 
   return (
     <Box mt="6">
       <Heading>Watchlist</Heading>
+      <Button
+        mt="4"
+        colorScheme="teal"
+        onClick={() => setWatchlistType(watchlistType === "movies" ? "tv" : "movies")}
+      >
+        {watchlistType === "movies" ? "Switch to TV Watchlist" : "Switch to Movie Watchlist"}
+      </Button>
       {watchlist.length === 0 ? (
         <Text>Your watchlist is empty.</Text>
       ) : (
@@ -83,9 +90,9 @@ const Watchlist = () => {
           gap={6}
           mt="6"
         >
-          {watchlist?.map((movie) => {
+          {watchlist?.map((item) => {
             return (
-              <Box key={movie?.id} position="relative">
+              <Box key={item?.id} position="relative">
                 <Button
                   position="absolute"
                   color="white"
@@ -94,11 +101,11 @@ const Watchlist = () => {
                   top="5px"
                   right="5px"
                   size="xs"
-                  onClick={() => removeFromWatchList(movie?.id?.toString())}
+                  onClick={() => removeFromWatchList(item?.id?.toString())}
                 >
                   Remove
                 </Button>
-                <CardComponent key={movie?.id} item={movie} type="movie" />
+                <CardComponent key={item?.id} item={item} type={watchlistType} />
               </Box>
             );
           })}

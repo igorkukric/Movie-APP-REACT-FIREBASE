@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { imagePath } from "../services/api";
 
 const CardComponent = ({ item, type }) => {
+  const itemType = type === "movies" ? "movie" : "tv";
   console.log(item, "item");
   return (
-    <Link to={`/${type}/${item?.id}`}>
+    <Link to={`/${itemType}/${item?.id}`}>
       <Box borderRadius={"lg"} background="blackAlpha.300">
         <Image
           src={`${imagePath}/${item?.poster_path}`}

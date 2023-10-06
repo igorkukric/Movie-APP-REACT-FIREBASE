@@ -34,11 +34,9 @@ const ShowDetails = () => {
   const [details, setDetails] = useState(null);
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [IsInWatchList, setIsInWatchList] = useState(false)
+  const [IsInWatchList, setIsInWatchList] = useState(false);
 
   const userFavouritesCollection = collection(db, "tv");
-
-  
 
   useEffect(() => {
     getDetails("tv", id)
@@ -48,21 +46,21 @@ const ShowDetails = () => {
       })
       .catch((err) => {
         console.log(err, "err");
-      })
-     
+      });
 
-    getVideos("tv", id).then((res) => {
-      console.log(res, "video res");
-      const { results } = res;
-      const resolveVideoType = results?.find(
-        (tv) => tv?.type === "Trailer"
-      );
-      //console.log(resolveVideoType, 'resolve')
-      if (resolveVideoType) {
+    getVideos("tv", id)
+      .then((res) => {
+        console.log(res, "video res");
+        const { results } = res;
+        const resolveVideoType = results?.find((tv) => tv?.type === "Trailer");
+        //console.log(resolveVideoType, 'resolve')
+        if (resolveVideoType) {
+          setVideo(resolveVideoType);
+        }
         setVideo(resolveVideoType);
-      }
-      setVideo(resolveVideoType);
-    }).catch((err)=> console.log(err)).finally(()=> setIsLoading(false))
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   }, [id]);
 
   useEffect(() => {
@@ -72,11 +70,13 @@ const ShowDetails = () => {
       const favourites = collection(userDocRef, "favourites");
       const favouritesQuery = query(favourites, where("id", "==", details?.id));
 
-      getDocs(favouritesQuery).then((querySnapshot)=> {
-        setIsInWatchList(!querySnapshot?.empty)
-      }).catch((err)=> {
-        console.log(err, "error from getting docs")
-      })
+      getDocs(favouritesQuery)
+        .then((querySnapshot) => {
+          setIsInWatchList(!querySnapshot?.empty);
+        })
+        .catch((err) => {
+          console.log(err, "error from getting docs");
+        });
     }
   }, [details, uid]);
 
@@ -89,10 +89,7 @@ const ShowDetails = () => {
 
       const userDocRef = doc(userFavouritesCollection, uid);
       const favouritesCollection = collection(userDocRef, "favourites");
-      const showDocument = doc(
-        favouritesCollection,
-        tvData?.id?.toString()
-      );
+      const showDocument = doc(favouritesCollection, tvData?.id?.toString());
 
       const docSnap = await getDoc(showDocument);
 
@@ -108,7 +105,7 @@ const ShowDetails = () => {
       } else {
         await setDoc(showDocument, tvData);
         // todo: local state change
-        setIsInWatchList(true)
+        setIsInWatchList(true);
         toast({
           title: "Success",
           description: "Tv Serie added to watch list.",
@@ -160,10 +157,12 @@ const ShowDetails = () => {
 
             <Box>
               <Flex gap={"4"} alignItems={"baseline"}>
-                <Heading>{details?.title} </Heading>
+                <Heading>{details?.name} </Heading>
                 <Heading fontSize={"sm"} color={"red.500"}>
                   {details?.episode_run_time[0]}minutes{" "}
                 </Heading>
+                <Heading fontSize="3xl">Seasons</Heading>
+                <Text fontSize="2xl" color={"red.500"}>{details?.number_of_seasons}</Text>
               </Flex>
               <Heading fontSize={"md"} mt="2" mb="6">
                 {details?.tagline}
@@ -197,7 +196,9 @@ const ShowDetails = () => {
                   {details?.homepage}{" "}
                 </a>
               </Text>
-              <Button onClick={handleSave}>{IsInWatchList ? "In Watchlist" : "Add To Watchlist"}</Button>
+              <Button onClick={handleSave}>
+                {IsInWatchList ? "In Watchlist" : "Add To Watchlist"}
+              </Button>
             </Box>
           </Grid>
 
