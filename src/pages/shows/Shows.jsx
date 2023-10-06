@@ -5,7 +5,7 @@ import CardComponent from "../../components/CardComponent";
 import Pagination from "../../components/Pagination";
 
 const Shows = () => {
-  const [movies, setMovies] = useState([]);
+  const [tv, setTv] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [activePage, setActivePage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -15,7 +15,7 @@ const Shows = () => {
     getTvShows(activePage)
       .then((res) => {
         // console.log(res, "media");
-        setMovies(res?.results);
+        setTv(res?.results);
         setActivePage(res?.page);
         setTotalPages(res?.total_pages);
       })
@@ -31,16 +31,16 @@ const Shows = () => {
     <Box mt="6">
       <Heading fontSize="2xl">Discover tv shows</Heading>
       <Grid templateColumns="repeat(5, 1fr)" gap={6} mt="6">
-        {movies?.map((movie) =>
+        {tv?.map((tv) =>
           isLoading ? (
             <Skeleton
-              key={movie?.id}
+              key={tv?.id}
               borderRadius={"lg"}
               bg="blackAlpha.300"
               height={"300px"}
             />
           ) : (
-            <CardComponent key={movie?.id} item={movie} type='tv' />
+            <CardComponent key={tv?.id} item={tv} type='tv' />
           )
         )}
       </Grid>
