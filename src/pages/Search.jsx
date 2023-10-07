@@ -97,12 +97,12 @@ const Search = () => {
         )}
       </Grid>
 
-      {/* Pagination */}
-      {/* <Pagination
+       Pagination 
+      <Pagination
         currentPage={activePage}
         setCurrentPage={setActivePage}
         totalPages={totalPage}
-      /> */}
+      /> 
     </Box>
   );
 };

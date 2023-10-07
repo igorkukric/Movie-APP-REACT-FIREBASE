@@ -50,9 +50,12 @@ const Watchlist = () => {
       );
       const itemDocRef = doc(userFavoritesCollection, itemID);
       await deleteDoc(itemDocRef);
+
+      const removedItemType = watchlistType === "movies" ? "Movie" : "TV show";
+
       toast({
         title: "Success",
-        description: "Item removed from watchlist.",
+        description: `${removedItemType} removed from Watchlist`,
         status: "success",
         duration: 3000,
         position: "top",
@@ -76,7 +79,7 @@ const Watchlist = () => {
         colorScheme="teal"
         onClick={() => setWatchlistType(watchlistType === "movies" ? "tv" : "movies")}
       >
-        {watchlistType === "movies" ? "Switch to TV Watchlist" : "Switch to Movie Watchlist"}
+        {watchlistType === "movies" ? "Switch to TV Shows " : "Switch to Movie"}
       </Button>
       {watchlist.length === 0 ? (
         <Text>Your watchlist is empty.</Text>
