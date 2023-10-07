@@ -75,6 +75,7 @@ const ShowDetails = () => {
         });
     }
   }, [details, uid]);
+  console.log(details)
 
   const addFavouriteShow = async (tvData) => {
     try {
@@ -161,6 +162,12 @@ const ShowDetails = () => {
                 </Heading>
                 <Heading fontSize="sm" color="red.500">
                   {details?.episode_run_time[0]} minutes
+                </Heading>
+                <Heading fontSize="xl">
+                  Seasons
+                </Heading>
+                <Heading fontSize="2xl" color="red.500">
+                   {details?.number_of_seasons} 
                 </Heading>
               </Flex>
               <Heading fontSize="md" mt="2" mb="6">

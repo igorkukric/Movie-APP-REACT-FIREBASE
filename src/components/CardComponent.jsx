@@ -8,7 +8,7 @@ const CardComponent = ({ item, type }) => {
 
   return (
     <Link to={`/${type}/${item?.id}`} style={{ textDecoration: "none" }}>
-      <Box borderRadius={"lg"} background="blackAlpha.300" >
+      <Box borderRadius={"lg"} background="blackAlpha.300" shadow="dark-lg" >
         <Image
           src={`${imagePath}/${item?.poster_path}`}
           borderRadius={"lg"}
@@ -17,7 +17,7 @@ const CardComponent = ({ item, type }) => {
           height={"300px"}
         />
         <Box p="2">
-          <Text fontSize="sm" textAlign="center">
+          <Text fontSize="md" fontWeight="semibold" textAlign="center">
             {item.title || item?.name}
           </Text>
         </Box>

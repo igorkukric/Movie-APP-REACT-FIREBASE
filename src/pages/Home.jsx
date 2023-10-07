@@ -61,7 +61,7 @@ const Home = () => {
 
   return (
     <Box mt="6">
-      <Heading fontSize="2xl">Trending now</Heading>
+      <Heading fontSize="2xl">Trending Now</Heading>
       <Grid
         templateColumns={{
           base: "1fr",
