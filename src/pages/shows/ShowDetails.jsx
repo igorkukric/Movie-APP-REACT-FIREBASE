@@ -30,18 +30,16 @@ const ShowDetails = () => {
   const { user, uid } = useAuth();
   const toast = useToast();
   const { id } = useParams();
-  // const { id } = router;
   const [details, setDetails] = useState(null);
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [IsInWatchList, setIsInWatchList] = useState(false);
+  const [isInWatchList, setIsInWatchList] = useState(false);
 
   const userFavouritesCollection = collection(db, "tv");
 
   useEffect(() => {
     getDetails("tv", id)
       .then((res) => {
-        console.log(res, "res");
         setDetails(res);
       })
       .catch((err) => {
@@ -50,10 +48,8 @@ const ShowDetails = () => {
 
     getVideos("tv", id)
       .then((res) => {
-        console.log(res, "video res");
         const { results } = res;
         const resolveVideoType = results?.find((tv) => tv?.type === "Trailer");
-        //console.log(resolveVideoType, 'resolve')
         if (resolveVideoType) {
           setVideo(resolveVideoType);
         }
@@ -104,7 +100,6 @@ const ShowDetails = () => {
         });
       } else {
         await setDoc(showDocument, tvData);
-        // todo: local state change
         setIsInWatchList(true);
         toast({
           title: "Success",
@@ -132,72 +127,75 @@ const ShowDetails = () => {
       });
       return;
     } else {
-      console.log("save");
       addFavouriteShow(details);
     }
   };
 
   return (
-    <Box mt="6">
+    <Box mt={{ base: 6, md: 12 }}>
       {isLoading ? (
         <Box textAlign="center">
           <Spinner size="lg" />
         </Box>
       ) : (
         <Box>
-          <Grid templateColumns="1fr 2fr" gap={6} mt="6">
+          <Grid
+            templateColumns={{ base: "1fr", md: "1fr 2fr" }}
+            gap={[4, 6]}
+            mt={[4, 6]}
+          >
             <Box>
               <Image
                 src={`${imagePath}${details?.poster_path}`}
-                borderRadius={"lg"}
-                objectFit={"cover"}
-                h="500px"
+                borderRadius="lg"
+                objectFit="cover"
+                h={{ base: "300px", md: "500px" }}
+                w="100%"
               />
             </Box>
 
             <Box>
-              <Flex gap={"4"} alignItems={"baseline"}>
-                <Heading>{details?.name} </Heading>
-                <Heading fontSize={"sm"} color={"red.500"}>
-                  {details?.episode_run_time[0]}minutes{" "}
+              <Flex gap="4" alignItems="baseline">
+                <Heading fontSize={{ base: "xl", md: "2xl" }}>
+                  {details?.name}
                 </Heading>
-                <Heading fontSize="3xl">Seasons</Heading>
-                <Text fontSize="2xl" color={"red.500"}>{details?.number_of_seasons}</Text>
+                <Heading fontSize="sm" color="red.500">
+                  {details?.episode_run_time[0]} minutes
+                </Heading>
               </Flex>
-              <Heading fontSize={"md"} mt="2" mb="6">
+              <Heading fontSize="md" mt="2" mb="6">
                 {details?.tagline}
               </Heading>
-              <Text fontSize={"sm"}>Release Date:</Text>
-              <Heading fontSize={"md"} mt="2" mb="6">
-                {new Date(details?.first_air_date).toDateString()}{" "}
+              <Text fontSize="sm">Release Date:</Text>
+              <Heading fontSize="md" mt="2" mb="6">
+                {new Date(details?.first_air_date).toDateString()}
               </Heading>
-              <Text fontSize={"sm"}>Rating:</Text>
-              <Heading fontSize={"md"} mt="2" mb="6">
-                {details?.vote_average.toFixed(1)}/10{" "}
+              <Text fontSize="sm">Rating:</Text>
+              <Heading fontSize="md" mt="2" mb="6">
+                {details?.vote_average.toFixed(1)}/10
               </Heading>
-              <Text fontSize={"sm"}>Votes:</Text>
-              <Heading fontSize={"md"} mt="2" mb="6">
+              <Text fontSize="sm">Votes:</Text>
+              <Heading fontSize="md" mt="2" mb="6">
                 {details?.vote_count}
               </Heading>
 
-              <Text fontSize={"md"} my="3">
-                {details?.overview}{" "}
+              <Text fontSize="md" my="3">
+                {details?.overview}
               </Text>
 
               {details?.genres?.map((genre) => (
                 <Tag key={genre?.id} variant="subtle" colorScheme="cyan" mr="1">
-                  {genre.name}{" "}
+                  {genre.name}
                 </Tag>
               ))}
 
-              <Text fontSize={"sm"} my={4}>
-                <a href={details?.homepage} target="_blank" rel="noreferer">
-                  {" "}
-                  {details?.homepage}{" "}
+              <Text fontSize="sm" my={4}>
+                <a href={details?.homepage} target="_blank" rel="noopener noreferrer">
+                  {details?.homepage}
                 </a>
               </Text>
               <Button onClick={handleSave}>
-                {IsInWatchList ? "In Watchlist" : "Add To Watchlist"}
+                {isInWatchList ? "In Watchlist" : "Add To Watchlist"}
               </Button>
             </Box>
           </Grid>
@@ -212,3 +210,4 @@ const ShowDetails = () => {
 };
 
 export default ShowDetails;
+

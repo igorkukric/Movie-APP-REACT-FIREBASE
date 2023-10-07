@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Flex, Grid, Heading, Skeleton } from "@chakra-ui/react";
+import { Box, Grid, Heading, Skeleton, useMediaQuery } from "@chakra-ui/react";
 import { getMovies } from "../../services/api";
 import CardComponent from "../../components/CardComponent";
 import Pagination from "../../components/Pagination";
@@ -9,6 +9,9 @@ const Movies = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+
+  const [isLargerThanMD] = useMediaQuery("(min-width: 48em)");
+  const [isLargerThanLG] = useMediaQuery("(min-width: 62em)");
 
   useEffect(() => {
     setIsLoading(true);
@@ -27,14 +30,20 @@ const Movies = () => {
       });
   }, [activePage]);
 
+  const getColumnCount = () => {
+    if (isLargerThanLG) return 5;
+    if (isLargerThanMD) return 3;
+    return 1;
+  };
+
   return (
     <Box mt="6">
       <Heading fontSize="2xl">Discover Movies</Heading>
-      <Grid templateColumns={{
-            base: "1fr",
-            md: "repeat(3, 1fr)",
-            lg: "repeat(5, 1fr)",
-          }} gap={6} mt="6">
+      <Grid
+        templateColumns={`repeat(${getColumnCount()}, 1fr)`}
+        gap={6}
+        mt="6"
+      >
         {movies?.map((movie) =>
           isLoading ? (
             <Skeleton
@@ -49,7 +58,6 @@ const Movies = () => {
         )}
       </Grid>
 
-      {/* Pagination */}
       <Pagination
         currentPage={activePage}
         setCurrentPage={setActivePage}

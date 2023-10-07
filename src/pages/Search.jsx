@@ -1,4 +1,3 @@
-import { ChevronDownIcon, Search2Icon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -11,6 +10,7 @@ import {
   MenuList,
   Skeleton,
 } from "@chakra-ui/react";
+import { ChevronDownIcon, Search2Icon } from "@chakra-ui/icons";
 import React, { useState } from "react";
 import { searchByType } from "../services/api";
 import CardComponent from "../components/CardComponent";
@@ -28,7 +28,6 @@ const Search = () => {
   const [media, setMedia] = useState([]);
 
   const handleSubmit = (e) => {
-    // const resolveCategory = category === "Movies" ? "movie" : "tv";
     e.preventDefault();
     setIsLoading(true);
     searchByType(category?.value, searchText, 1)
@@ -47,8 +46,8 @@ const Search = () => {
 
   return (
     <Box mt="6">
-      <Flex gap={4}>
-        <Box>
+      <Flex flexDirection={{ base: "column", md: "row" }} gap={4}>
+        <Box flex="1">
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               {category?.title}
@@ -68,28 +67,34 @@ const Search = () => {
           </Menu>
         </Box>
 
-        <Box width={"full"}>
+        <Box width={{ base: "full", md: "auto" }}>
           <form onSubmit={handleSubmit}>
-            <Flex gap={4}>
+            <Flex flexDirection={{ base: "column", md: "row" }} gap={4}>
               <Input
                 placeholder="Search..."
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
               />
-              <Button type="submit"> {<Search2Icon />}</Button>
+              <Button type="submit">
+                <Search2Icon />
+              </Button>
             </Flex>
           </form>
         </Box>
       </Flex>
 
-      <Grid templateColumns="repeat(5, 1fr)" gap={6} mt="6">
+      <Grid
+        templateColumns="repeat(auto-fill, minmax(150px, 1fr))"
+        gap={6}
+        mt="6"
+      >
         {media?.map((med) =>
           isLoading ? (
             <Skeleton
               key={med?.id}
-              borderRadius={"lg"}
-              background={"blackAlpha.300"}
-              height={"300px"}
+              borderRadius="lg"
+              background="blackAlpha.300"
+              height="300px"
             />
           ) : (
             <CardComponent key={med?.id} item={med} type={category?.value} />
@@ -101,7 +106,7 @@ const Search = () => {
         currentPage={activePage}
         setCurrentPage={setActivePage}
         totalPages={totalPage}
-      /> 
+      />
     </Box>
   );
 };

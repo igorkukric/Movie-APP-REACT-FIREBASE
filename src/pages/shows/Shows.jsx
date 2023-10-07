@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Grid, Heading, Skeleton } from "@chakra-ui/react";
+import { Box, Grid, Heading, Skeleton, useMediaQuery } from "@chakra-ui/react";
 import { getTvShows } from "../../services/api";
 import CardComponent from "../../components/CardComponent";
 import Pagination from "../../components/Pagination";
@@ -10,46 +10,53 @@ const Shows = () => {
   const [activePage, setActivePage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
+  const [isLargerThanMD] = useMediaQuery("(min-width: 48em)");
+  const [isLargerThanLG] = useMediaQuery("(min-width: 62em)");
+
   useEffect(() => {
     setIsLoading(true);
     getTvShows(activePage)
       .then((res) => {
-        // console.log(res, "media");
         setTv(res?.results);
         setActivePage(res?.page);
         setTotalPages(res?.total_pages);
       })
       .catch((err) => {
-        console.log(err, "err");
+        console.log(err, "error");
       })
       .finally(() => {
         setIsLoading(false);
       });
   }, [activePage]);
 
+  const getColumnCount = () => {
+    if (isLargerThanLG) return 5;
+    if (isLargerThanMD) return 3;
+    return 1;
+  };
+
   return (
     <Box mt="6">
-      <Heading fontSize="2xl">Discover Tv Shows</Heading>
-      <Grid templateColumns={{
-            base: "1fr",
-            md: "repeat(3, 1fr)",
-            lg: "repeat(5, 1fr)",
-          }} gap={6} mt="6">
-        {tv?.map((tv) =>
+      <Heading fontSize="2xl">Discover TV Shows</Heading>
+      <Grid
+        templateColumns={`repeat(${getColumnCount()}, 1fr)`}
+        gap={6}
+        mt="6"
+      >
+        {tv?.map((tvShow) =>
           isLoading ? (
             <Skeleton
-              key={tv?.id}
+              key={tvShow?.id}
               borderRadius={"lg"}
-              bg="blackAlpha.300"
+              background={"blackAlpha.300"}
               height={"300px"}
             />
           ) : (
-            <CardComponent key={tv?.id} item={tv} type='tv' />
+            <CardComponent key={tvShow?.id} item={tvShow} type={"tv"} />
           )
         )}
       </Grid>
 
-      {/* Pagination */}
       <Pagination
         currentPage={activePage}
         setCurrentPage={setActivePage}
@@ -60,4 +67,5 @@ const Shows = () => {
 };
 
 export default Shows;
+
 
