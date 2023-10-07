@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 import { imagePath } from "../services/api";
 
 const CardComponent = ({ item, type }) => {
-  const itemType = type === "movies" ? "movie" : "tv";
-  console.log(item, "item");
+ 
+
   return (
-    <Link to={`/${itemType}/${item?.id}`}>
-      <Box borderRadius={"lg"} background="blackAlpha.300">
+    <Link to={`/${type}/${item?.id}`} style={{ textDecoration: "none" }}>
+      <Box borderRadius={"lg"} background="blackAlpha.300" >
         <Image
           src={`${imagePath}/${item?.poster_path}`}
           borderRadius={"lg"}
@@ -18,8 +18,7 @@ const CardComponent = ({ item, type }) => {
         />
         <Box p="2">
           <Text fontSize="sm" textAlign="center">
-            {" "}
-            {item.title || item?.name}{" "}
+            {item.title || item?.name}
           </Text>
         </Box>
       </Box>
@@ -28,3 +27,4 @@ const CardComponent = ({ item, type }) => {
 };
 
 export default CardComponent;
+

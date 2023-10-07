@@ -105,7 +105,7 @@ const Watchlist = () => {
                 >
                   Remove
                 </Button>
-                <CardComponent key={item?.id} item={item} type={watchlistType} />
+                <CardComponent key={item?.id} item={item} type={watchlistType === "movies" ? "movie" : "tv"} />
               </Box>
             );
           })}
