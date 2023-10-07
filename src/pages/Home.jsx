@@ -67,13 +67,13 @@ const Home = () => {
         {media?.map((item, index) =>
           isLoading && index === media.length - 1 ? (
             <Skeleton
-              key={item?.id}
+              key={`${item?.id}-${index}`}
               borderRadius={"lg"}
               background={"blackAlpha.300"}
               height={"300px"}
             />
           ) : (
-            <CardComponent key={item?.id} item={item} type={item?.media_type} />
+            <CardComponent key={`${item?.id}-${index}`} item={item} type={item?.media_type} />
           )
         )}
       </Grid>
