@@ -97,7 +97,6 @@ const Search = () => {
         )}
       </Grid>
 
-       Pagination 
       <Pagination
         currentPage={activePage}
         setCurrentPage={setActivePage}

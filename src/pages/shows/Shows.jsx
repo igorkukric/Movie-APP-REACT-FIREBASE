@@ -29,7 +29,7 @@ const Shows = () => {
 
   return (
     <Box mt="6">
-      <Heading fontSize="2xl">Discover tv shows</Heading>
+      <Heading fontSize="2xl">Discover Tv Shows</Heading>
       <Grid templateColumns={{
             base: "1fr",
             md: "repeat(3, 1fr)",

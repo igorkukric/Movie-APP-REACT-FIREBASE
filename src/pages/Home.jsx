@@ -6,8 +6,9 @@ import CardComponent from "../components/CardComponent";
 const Home = () => {
   const [media, setMedia] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1);  
-  const loaderRef = useRef(null);  
+  const [page, setPage] = useState(1);
+  const loaderRef = useRef(null);
+  const loadedMediaIds = useRef(new Set());
 
   const loadMoreData = () => {
     setPage(page + 1);
@@ -15,9 +16,16 @@ const Home = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getTrending(page)  
+    getTrending(page)
       .then((res) => {
-        setMedia((prevMedia) => [...prevMedia, ...res?.results]); 
+        const newMedia = res?.results.filter((item) => {
+          if (!loadedMediaIds.current.has(item.id)) {
+            loadedMediaIds.current.add(item.id);
+            return true;
+          }
+          return false;
+        });
+        setMedia((prevMedia) => [...prevMedia, ...newMedia]);
       })
       .catch((err) => {
         console.log(err, "error");
@@ -26,7 +34,6 @@ const Home = () => {
         setIsLoading(false);
       });
   }, [page]);
-
   
   useEffect(() => {
     const options = {
