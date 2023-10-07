@@ -6,8 +6,8 @@ import CardComponent from "../components/CardComponent";
 const Home = () => {
   const [media, setMedia] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1);  // Current page number
-  const loaderRef = useRef(null);  // Ref for the loader element
+  const [page, setPage] = useState(1);  
+  const loaderRef = useRef(null);  
 
   const loadMoreData = () => {
     setPage(page + 1);
@@ -15,9 +15,9 @@ const Home = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getTrending(page)  // Fetch trending items for the current page
+    getTrending(page)  
       .then((res) => {
-        setMedia((prevMedia) => [...prevMedia, ...res?.results]);  // Append new items to the existing list
+        setMedia((prevMedia) => [...prevMedia, ...res?.results]); 
       })
       .catch((err) => {
         console.log(err, "error");
@@ -27,7 +27,7 @@ const Home = () => {
       });
   }, [page]);
 
-  // Use IntersectionObserver to load more data when user scrolls to the loader element
+  
   useEffect(() => {
     const options = {
       root: null,
