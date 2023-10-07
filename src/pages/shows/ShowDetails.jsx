@@ -75,7 +75,7 @@ const ShowDetails = () => {
         });
     }
   }, [details, uid]);
-  console.log(details)
+  console.log(details);
 
   const addFavouriteShow = async (tvData) => {
     try {
@@ -163,20 +163,30 @@ const ShowDetails = () => {
                 <Heading fontSize="sm" color="red.500">
                   {details?.episode_run_time[0]} minutes
                 </Heading>
-                <Heading fontSize="xl">
-                  Seasons
-                </Heading>
+                <Heading fontSize="xl">Seasons</Heading>
                 <Heading fontSize="2xl" color="red.500">
-                   {details?.number_of_seasons} 
+                  {details?.number_of_seasons}
+                </Heading>
+                <Heading fontSize="xl">
+                  ( Episodes {details?.number_of_episodes} )
                 </Heading>
               </Flex>
               <Heading fontSize="md" mt="2" mb="6">
                 {details?.tagline}
               </Heading>
-              <Text fontSize="sm">Release Date:</Text>
-              <Heading fontSize="md" mt="2" mb="6">
-                {new Date(details?.first_air_date).toDateString()}
-              </Heading>
+              <Flex gap={2} mb={2}>
+                <Text fontSize="sm">Release Date:</Text>
+                <Heading fontSize="md">
+                  {details?.first_air_date.split("-").reverse().join("-")}
+                </Heading>
+              </Flex>
+              <Flex gap={2} mb={3}>
+                <Text fontSize="sm">Last Air Date:</Text>
+                <Heading fontSize="md">
+                  {details?.last_air_date.split("-").reverse().join("-")}
+                </Heading>
+              </Flex>
+
               <Text fontSize="sm">Rating:</Text>
               <Heading fontSize="md" mt="2" mb="6">
                 {details?.vote_average.toFixed(1)}/10
@@ -197,7 +207,11 @@ const ShowDetails = () => {
               ))}
 
               <Text fontSize="sm" my={4}>
-                <a href={details?.homepage} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={details?.homepage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {details?.homepage}
                 </a>
               </Text>
@@ -217,4 +231,3 @@ const ShowDetails = () => {
 };
 
 export default ShowDetails;
-

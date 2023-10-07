@@ -46,12 +46,14 @@ const MovieDetails = () => {
       .catch((err) => {
         console.log(err, "err");
       });
-      
+
     getVideos("movie", id)
       .then((res) => {
         console.log(res, "video res");
         const { results } = res;
-        const resolveVideoType = results?.find((movie) => movie?.type === "Trailer");
+        const resolveVideoType = results?.find(
+          (movie) => movie?.type === "Trailer"
+        );
         if (resolveVideoType) {
           setVideo(resolveVideoType);
         }
@@ -87,7 +89,10 @@ const MovieDetails = () => {
 
       const userDocRef = doc(userFavouritesCollection, uid);
       const favouritesCollection = collection(userDocRef, "favourites");
-      const movieDocument = doc(favouritesCollection, movieData?.id?.toString());
+      const movieDocument = doc(
+        favouritesCollection,
+        movieData?.id?.toString()
+      );
 
       const docSnap = await getDoc(movieDocument);
 
@@ -167,16 +172,21 @@ const MovieDetails = () => {
               </Heading>
               <Text fontSize="sm">Release Date:</Text>
               <Heading fontSize="md" mt="2" mb="6">
-                {new Date(details?.release_date).toDateString()}
+                {details?.release_date.split("-").reverse().join("-")}
               </Heading>
+
               <Text fontSize="sm">Rating:</Text>
               <Heading fontSize="md" mt="2" mb="6">
                 {details?.vote_average.toFixed(1)}/10
               </Heading>
-              <Text fontSize="sm">Votes:</Text>
-              <Heading fontSize="md" mt="2" mb="6">
-                {details?.vote_count}
-              </Heading>
+              <Flex gap={3}>
+                <Text fontSize="sm">Revenue:</Text>
+                <Heading fontSize="md">
+                  {(details?.revenue).toLocaleString()}$
+                </Heading>
+                <Text fontSize="sm">Votes:</Text>
+                <Heading fontSize="md">{details?.vote_count}</Heading>
+              </Flex>
 
               <Text fontSize="md" my="3">
                 {details?.overview}
@@ -189,7 +199,11 @@ const MovieDetails = () => {
               ))}
 
               <Text fontSize="sm" my={4}>
-                <a href={details?.homepage} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={details?.homepage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {details?.homepage}
                 </a>
               </Text>

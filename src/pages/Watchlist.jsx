@@ -101,8 +101,7 @@ const Watchlist = () => {
                   color="white"
                   zIndex={"999"}
                   background={"red"}
-                  top="5px"
-                  right="5px"
+                  right="0"
                   size="xs"
                   onClick={() => removeFromWatchList(item?.id?.toString())}
                 >
