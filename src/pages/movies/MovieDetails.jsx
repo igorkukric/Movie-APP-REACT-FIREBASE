@@ -11,7 +11,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { getDetails, getVideos, imagePath } from "../../services/api";
+import {
+  getDetails,
+  getMovieActors,
+  getVideos,
+  imagePath,
+} from "../../services/api";
 import { useParams } from "react-router-dom";
 import VideoComponent from "../../components/VideoComponent";
 import { useAuth } from "../../context/useAuth";
@@ -34,6 +39,7 @@ const MovieDetails = () => {
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isInWatchList, setIsInWatchList] = useState(false);
+  const [actors, setActors] = useState([]);
 
   const userFavouritesCollection = collection(db, "movies");
 
@@ -46,6 +52,12 @@ const MovieDetails = () => {
       .catch((err) => {
         console.log(err, "err");
       });
+    getMovieActors(id)
+      .then((res) => {
+        console.log(res, "Actors");
+        setActors(res);
+      })
+      .catch((err) => console.log(err));
 
     getVideos("movie", id)
       .then((res) => {
@@ -170,7 +182,16 @@ const MovieDetails = () => {
               <Heading fontSize="md" mt="2" mb="6">
                 {details?.tagline}
               </Heading>
+              <Flex gap={4} wrap="wrap">
+                <Text fontSize="sm">Cast:</Text>
+                {actors.cast?.slice(0, 6).map((actor) => (
+                  <Heading  fontSize="md" mb="6" key={actor?.id}>
+                    {actor.name}
+                  </Heading>
+                ))}
+              </Flex>
               <Text fontSize="sm">Release Date:</Text>
+
               <Heading fontSize="md" mt="2" mb="6">
                 {details?.release_date.split("-").reverse().join("-")}
               </Heading>
@@ -182,7 +203,7 @@ const MovieDetails = () => {
               <Flex gap={3}>
                 <Text fontSize="sm">Revenue:</Text>
                 <Heading fontSize="md">
-                  {(details?.revenue).toLocaleString()}$
+                {(parseInt(details?.revenue) || 0).toLocaleString()} $
                 </Heading>
                 <Text fontSize="sm">Votes:</Text>
                 <Heading fontSize="md">{details?.vote_count}</Heading>

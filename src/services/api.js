@@ -23,6 +23,15 @@ export const getMovies = async (page = 1) => {
   return res?.data;
 };
 
+// Movie Actors
+
+export const getMovieActors = async (movieId) => {
+  const res = await axios.get(
+    `${apiUrl}/movie/${movieId}/credits?api_key=${apiKey}`
+  )
+  return res?.data
+}
+
 // Series
 
 export const getTvShows = async (page = 1) => {
