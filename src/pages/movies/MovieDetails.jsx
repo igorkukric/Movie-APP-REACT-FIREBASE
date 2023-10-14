@@ -203,7 +203,7 @@ const MovieDetails = () => {
               <Flex gap={3}>
                 <Text fontSize="sm">Revenue:</Text>
                 <Heading fontSize="md">
-                {(parseInt(details?.revenue) || 0).toLocaleString()} $
+                  {(parseInt(details?.revenue) || 0).toLocaleString()} $
                 </Heading>
                 <Text fontSize="sm">Votes:</Text>
                 <Heading fontSize="md">{details?.vote_count}</Heading>

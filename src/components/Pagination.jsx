@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
 
 const Pagination = ({ currentPage, setCurrentPage, totalPages }) => {
-  const maxPagesToShow = 5; // Maximum number of pages to display
+  const maxPagesToShow = 5; 
 
   const renderPaginationButtons = () => {
     const buttons = [];
