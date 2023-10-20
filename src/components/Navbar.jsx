@@ -34,7 +34,11 @@ const Navbar = () => {
   return (
     <Box py="4" bg="blackAlpha.200">
       <Container maxW="container.xl">
-        <Flex justifyContent="space-between">
+      <Flex
+          flexDirection={{ base: "column", md: "row" }}
+          justifyContent="space-between"
+          alignItems={{ base: "center", md: "flex-start" }} 
+        >
           <Link to="/">
             <Box
               fontSize="3xl"
@@ -42,6 +46,7 @@ const Navbar = () => {
               color="red"
               letterSpacing="wider"
               fontFamily="mono"
+              mb={{ base: 4, md: 0 }} 
             >
               NETFLEX
             </Box>
@@ -70,7 +75,7 @@ const Navbar = () => {
             )}
             {!user && (
               <Box cursor="pointer" onClick={handleGoogleLogin}>
-                Login{" "}
+                Login
               </Box>
             )}
           </Flex>
