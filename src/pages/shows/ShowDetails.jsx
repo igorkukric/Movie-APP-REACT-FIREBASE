@@ -156,7 +156,11 @@ const ShowDetails = () => {
             </Box>
 
             <Box>
-              <Flex gap="4" alignItems="baseline">
+              <Flex
+                flexDirection={{ base: "column", md: "row" }}
+                alignItems="baseline"
+                gap={4}
+              >
                 <Heading fontSize={{ base: "xl", md: "2xl" }}>
                   {details?.name}
                 </Heading>
