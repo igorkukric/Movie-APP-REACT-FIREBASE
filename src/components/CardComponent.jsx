@@ -12,9 +12,9 @@ const CardComponent = ({ item, type }) => {
         <Image
           src={`${imagePath}/${item?.poster_path}`}
           borderRadius={"lg"}
-          objectFit={"cover"}
+          objectFit={"contain"}
           width={"full"}
-          height={"300px"}
+          height={"full"}
         />
         <Box p="2">
           <Text fontSize="md" fontWeight="semibold" textAlign="center">

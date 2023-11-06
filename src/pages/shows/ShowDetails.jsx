@@ -149,9 +149,8 @@ const ShowDetails = () => {
               <Image
                 src={`${imagePath}${details?.poster_path}`}
                 borderRadius="lg"
-                objectFit="cover"
-                h={{ base: "300px", md: "500px" }}
-                w="100%"
+                objectFit="contain"
+               
               />
             </Box>
 
